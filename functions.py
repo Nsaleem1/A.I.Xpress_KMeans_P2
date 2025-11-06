@@ -69,21 +69,24 @@ def kMeans(locations, k):
     BSFclusters = {}
     BSFtotalDistance = float('inf')
     BSFallDistances = []
-    movement = 1e-4
+    movement = 0.1
     max = 100
 
     for _ in range(10):
 
-        #choosing random location for center 
+        #choosing random locations for the center
         for i in range(k):
             randCenters = random.sample(locations, k)
             clusters[i] = { 'center' : randCenters[i], 'points' : [] }
-        
-        #assigning cluster points
+    
+        #assign points and move center, repeat until movement is limited or reach max 
         for iteration in range (max):
+
+            #empty points 
             for i in range(k):
                 clusters[i]['points'] = []
             
+            #reassign points
             for loc in locations:
                 shortestDist = float('inf')
                 closestCluster = None
@@ -105,9 +108,6 @@ def kMeans(locations, k):
                     centersMoved = True
                 clusters[i]['center'] = newCenter
             
-            if not centersMoved:
-                break
-            
             allClusterDistances = nearestNeighbor(clusters)
             totalDistance = sum(allClusterDistances)
 
@@ -115,6 +115,10 @@ def kMeans(locations, k):
                 BSFtotalDistance = totalDistance
                 BSFclusters = copy.deepcopy(clusters)
                 BSFallDistances = copy.deepcopy(allClusterDistances)
+            
+            #if the centers are not moving, break out of the iteration loop
+            if not centersMoved:
+                break
     
     return BSFclusters, BSFallDistances
 
