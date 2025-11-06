@@ -12,19 +12,17 @@ def output(k, clusters, distances):
         print(f"\t{i}.\tLanding Pad {i} should be at {int(clusters[i - 1]['center'][0]), int(clusters[i-1]['center'][1])}, serving AHH locations, route is {int(distances[i - 1])} meters\n")
 
 # returns the list allClusterDistances, NN on each cluster -- the total distance for that
-def nearestNeighbor(clusters, locations, distanceMatrix):
+def nearestNeighbor(clusters):
 
     allClusterDistances = []
 
     for i in range(len(clusters)):
         clusterLoc = clusters[i]['points']
+
         #making sure list is not empty 
         if not clusterLoc:
             allClusterDistances.append(0)
             continue
-
-         # Map cluster points to their indices in the original locations array
-        clusterLocIndices = [locations.index(pt) for pt in clusterLoc]   
 
         unvisited = list(range(len(clusterLoc)))  
         visited = []
@@ -39,14 +37,11 @@ def nearestNeighbor(clusters, locations, distanceMatrix):
             # find nearest neighbor
             for j in unvisited:
                 if current == -1:
-                    # landing pad to random point 
+                    # landing pad to the NN
                     dist = euclideanDistance(clusters[i]['center'], clusterLoc[j])
                 else:
-                    # the indices in the cluster are not the same points from the distance matrix
-                    matrixCurrent = clusterLocIndices[current]
-                    matrixNext = clusterLocIndices[j]
-                    dist = distanceMatrix[matrixCurrent][matrixNext]
-
+                    dist = euclideanDistance(clusterLoc[current],clusterLoc[j])
+                                             
                 if dist < smallestDist:
                     smallestDist = dist
                     nextPoint = j
@@ -69,7 +64,7 @@ def nearestNeighbor(clusters, locations, distanceMatrix):
 # BSFclusters = {center: (x,y) points: [] } for each cluster
 # BSFallDistances = [dist1, dist2] the NN total distance route of each cluster 
 
-def kMeans(locations, k, distanceMatrix):
+def kMeans(locations, k):
     clusters = {}
     BSFclusters = {}
     BSFtotalDistance = float('inf')
@@ -113,7 +108,7 @@ def kMeans(locations, k, distanceMatrix):
             if not centersMoved:
                 break
             
-            allClusterDistances = nearestNeighbor(clusters, locations, distanceMatrix)
+            allClusterDistances = nearestNeighbor(clusters)
             totalDistance = sum(allClusterDistances)
 
             if totalDistance < BSFtotalDistance:

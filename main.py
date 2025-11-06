@@ -21,15 +21,6 @@ with open(fileName, "r") as text:
         #ensuring nodes do not exceed limit
         if len(locations) > 4096:
             raise Exception("Max amount of Nodes in file reached")
-
-#creating matrix
-distanceMatrix = [[0] * len(locations) for x in range(len(locations))]
-
-#computing values inside matrix 
-for i in range(len(locations)):
-    for j in range(len(locations)):
-        distanceMatrix[i][j] = functions.euclideanDistance(locations[i], locations[j])
-
 #time
 pst_time = datetime.now(ZoneInfo("America/Los_Angeles")) + timedelta(minutes=5)
 print(f"There are {len(locations)} nodes: Solutions will be available by {pst_time.strftime("%-I:%M %p")}\n")
@@ -41,13 +32,13 @@ cluster2 = {}
 cluster3 = {}
 cluster4 = {}
 
-cluster1, dist = functions.kMeans(locations, 1, distanceMatrix)
+cluster1, dist = functions.kMeans(locations, 1)
 functions.output(1, cluster1, dist)
-cluster2, dist = functions.kMeans(locations, 2, distanceMatrix)
+cluster2, dist = functions.kMeans(locations, 2)
 functions.output(2,cluster2, dist)
-cluster3, dist = functions.kMeans(locations, 3, distanceMatrix)
+cluster3, dist = functions.kMeans(locations, 3)
 functions.output(3, cluster3, dist)
-cluster4, dist = functions.kMeans(locations, 4, distanceMatrix)
+cluster4, dist = functions.kMeans(locations, 4)
 functions.output(4, cluster4, dist)
 
 
