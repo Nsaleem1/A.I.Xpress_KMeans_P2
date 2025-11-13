@@ -21,7 +21,7 @@ def nearestNeighbor(clusters):
     for i in range(len(clusters)):
         clusterLoc = clusters[i]['points']
 
-        #making sure list is not empty 
+        # making sure list is not empty 
         if not clusterLoc:
             allClusterDistances.append(0)
             allClusterRoutes.append([])
@@ -134,41 +134,35 @@ def kMeans(locations, k):
     
     return BSFclusters, BSFallDistances
 
-def plot_chosen_clusters(choice, clusters_list, filename):
-    """
-    Plots the chosen number of clusters as a JPEG.
+def plotChosenClusters(choice, clustersList, filename):
     
-    :param choice: int, number of clusters selected by the user
-    :param clusters_list: list of cluster dictionaries [cluster0, cluster1, ...]
-    :param filename: str, output filename
-    """
     colors = ['orange', 'magenta', 'cyan', 'pink']
 
-    # Only use the first 'choice' clusters
-    clusters_to_plot = clusters_list[:choice]
+    # Only use the choice clusters
+    clustersToPlot = clustersList[:choice]
 
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(15, 15))
 
-    for i, cluster in enumerate(clusters_to_plot):
+    for i, cluster in enumerate(clustersToPlot):
         color = colors[i % len(colors)]
-        cluster_points = cluster['points']
-        x_coords = [p[0] for p in cluster_points]
-        y_coords = [p[1] for p in cluster_points]
+        clusterPoints = cluster['points']
+        x_coords = [p[0] for p in clusterPoints]
+        y_coords = [p[1] for p in clusterPoints]
 
-        # Plot cluster points with unique color
         plt.scatter(
             x_coords, y_coords, s=20, 
             color=colors[i % len(colors)], alpha=0.6, label=f'Cluster {i+1}'
         )
 
         if 'route' in cluster and len(cluster['route']) > 1:
-            route_x = [p[0] for p in cluster['route']]
-            route_y = [p[1] for p in cluster['route']]
+            fullRoute = [cluster['center']] + cluster['route'] + [cluster['center']]
+            route_x = [p[0] for p in fullRoute]
+            route_y = [p[1] for p in fullRoute]
             plt.plot(route_x, route_y, color=color, linewidth=1.2, alpha=0.8)
 
-        # Plot cluster center / landing pad as BIG distinct dot
+        # landing pad is big X
         plt.scatter(
-            cluster['center'][0], cluster['center'][1], s=250,  # bigger than points
+            cluster['center'][0], cluster['center'][1], s=250,  
             color=colors[i % len(colors)], edgecolor='black', marker='X', label=f'Center {i+1}'
         )
 
@@ -179,57 +173,41 @@ def plot_chosen_clusters(choice, clusters_list, filename):
 
     # Save as JPEG
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    image_path = os.path.join(desktop, f"{filename}_SOLUTION_{choice}.jpeg")
-    #file_path = os.path.join(desktop, f"{filename}_{choice}_SOLUTION_FIX_DIST.txt")
+    image_path = os.path.join(desktop, f"{filename[:-4]}_SOLUTION_{choice}.jpeg")
     
-    # plt.savefig(image_path, dpi=300)
     plt.axis('equal')
     plt.savefig(image_path, format='jpeg')
     plt.close()
-    print(f"Clusters plotted and saved as {filename}_OVERALL_SOLUTION_{choice}.jpeg\n")
-
+    print(f"Image of clusters saved to desktop as {filename[:-4]}_OVERALL_SOLUTION.jpeg\n")
 
 def cluster_dict_to_list(cluster_dict):
     return [cluster_dict[i] for i in range(len(cluster_dict))]
 
 def save_cluster_locations(clusters, locations, distances, filename):
-    """
-    Saves each cluster's location numbers (1-based indices) to a separate text file.
-    Each file name includes the total route distance for that cluster.
-
-    :param clusters: list of cluster dictionaries [{center: (), points: []}, ...]
-    :param locations: list of all original (x, y) points in order
-    :param distances: list of total route distances for each cluster
-    :param filename: base filename for output files
-    """
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
 
     for i, cluster in enumerate(clusters, start=1):
         cluster_points = cluster['points']
         cluster_indices = []
 
-        # Get the location numbers (1-based)
+        # Get the location numbers 
         for p in cluster_points:
             if p in locations:
                 cluster_indices.append(locations.index(p) + 1)
 
-        # Include distance in filename (rounded to integer meters)
+        # Include distance in filename 
         cluster_distance = int(distances[i - 1]) if i - 1 < len(distances) else 0
         cluster_file_path = os.path.join(
             desktop,
-            f"{filename}_{i}_SOLUTION_{cluster_distance}.txt"
+            f"{filename[:-4]}_{i}_SOLUTION_{cluster_distance}.txt"
         )
 
         # Write to file
         with open(cluster_file_path, 'w') as f:
-            f.write(f"Landing Pad Center: {cluster['center']}\n")
-            f.write(f"Total Route Distance: {cluster_distance} meters\n")
-            f.write(f"Number of Locations: {len(cluster_indices)}\n\n")
-            f.write("Locations in this cluster:\n")
             for loc_num in cluster_indices:
                 f.write(f"{loc_num}\n")
 
-        print(f"{filename}_{i}_SOLUTION_{cluster_distance}.txt saved to desktop")
+        print(f"{filename[:-4]}_{i}_SOLUTION_{cluster_distance}.txt saved to desktop")
    
 
 
