@@ -34,12 +34,25 @@ cluster4 = {}
 
 cluster1, dist = functions.kMeans(locations, 1)
 functions.output(1, cluster1, dist)
+sse1 = functions.totalSSE(cluster1)
+
 cluster2, dist = functions.kMeans(locations, 2)
 functions.output(2,cluster2, dist)
+sse2 = functions.totalSSE(cluster2)
+
 cluster3, dist = functions.kMeans(locations, 3)
 functions.output(3, cluster3, dist)
+sse3 = functions.totalSSE(cluster3)
+
 cluster4, dist = functions.kMeans(locations, 4)
 functions.output(4, cluster4, dist)
+sse4 = functions.totalSSE(cluster4)
+
+with open("sseVals.txt", "w") as f:
+    f.write(f"{fileName} for k = 1 sse is {sse1}\n")
+    f.write(f"{fileName} for k = 2 sse is {sse2}\n")
+    f.write(f"{fileName} for k = 3 sse is {sse3}\n")
+    f.write(f"{fileName} for k = 4 sse is {sse4}\n")
 
 choice = int(input("Please select your choice 1 to 4: "))
  

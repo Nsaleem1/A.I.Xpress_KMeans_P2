@@ -209,6 +209,23 @@ def save_cluster_locations(clusters, locations, distances, filename):
 
         print(f"{filename[:-4]}_{i}_SOLUTION_{cluster_distance}.txt saved to desktop")
    
+def SSE(center, points):
+    cx, cy = center
+    sse = 0
+    for x, y in points:
+        dx = x - cx
+        dy = y - cy
+        sse += dx*dx + dy*dy
+    return sse
+
+def totalSSE(clusters):
+    total = 0
+    for clusterData in clusters.values():
+        center = clusterData["center"]
+        points = clusterData["points"]
+        total += SSE(center, points)  # SSE computes sum of squared distances for this cluster
+    return total
+
 
 
             
