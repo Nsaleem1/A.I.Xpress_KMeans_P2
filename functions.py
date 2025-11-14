@@ -166,11 +166,11 @@ def plotChosenClusters(choice, clustersList, filename):
             color=colors[i % len(colors)], edgecolor='black', marker='X', label=f'Center {i+1}'
         )
 
-    plt.title(f"K-Means Clusters ({choice} Clusters)", fontsize=16)
-    plt.xlabel("X Coordinate", fontsize=16)
-    plt.ylabel("Y Coordinate", fontsize=16)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
+    plt.title(f"K-Means ({choice} Cluster(s)) on {filename}", fontsize=32)
+    plt.xlabel("X Coordinate Values", fontsize=24)
+    plt.ylabel("Y Coordinate Values", fontsize=24)
+    plt.xticks(fontsize=24)
+    plt.yticks(fontsize=24)
     plt.grid(True)
 
     # Save as JPEG
