@@ -1,4 +1,4 @@
 oneCircle.txt for k = 1 sse is 48.9619890860034
 oneCircle.txt for k = 2 sse is 26.58458709808126
-oneCircle.txt for k = 3 sse is 20.933746124068357
-oneCircle.txt for k = 4 sse is 8.433329977394552
+oneCircle.txt for k = 3 sse is 24.153364279945055
+oneCircle.txt for k = 4 sse is 8.107853743142394
