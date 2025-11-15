@@ -8,9 +8,13 @@ def euclideanDistance(loc1, loc2):
     return math.sqrt((loc1[0] - loc2[0])**2 + (loc1[1] - loc2[1])**2)
 
 def output(k, clusters, distances):
-    print(f"{k}) If you use {k} drone(s), the total route will be {int(sum(distances))} meters\n")
-    for i in range(1,k + 1):
-        print(f"\t{i}.\tLanding Pad {i} should be at {int(clusters[i - 1]['center'][0]), int(clusters[i-1]['center'][1])}, serving {len(clusters[i-1]['points'])} locations, route is {int(distances[i - 1])} meters\n")
+    roundedDists = [round(d) for d in distances]
+    total = sum(roundedDists)
+
+    print(f"{k}) If you use {k} drone(s), the total route will be {total} meters\n")
+    for i in range(1, k + 1):
+        center = clusters[i - 1]['center']
+        print(f"\t{i}.\tLanding Pad {i} should be at ({int(center[0])}, {int(center[1])}), serving {len(clusters[i-1]['points'])} locations, route is {roundedDists[i - 1]} meters\n")
 
 # returns the list allClusterDistances, NN on each cluster -- the total distance for that
 def nearestNeighbor(clusters):
@@ -64,7 +68,6 @@ def nearestNeighbor(clusters):
         allClusterDistances.append(clusterDistance)
         allClusterRoutes.append(route)
 
-
     return allClusterDistances, allClusterRoutes
 
 # returns BSFclusters and BSFallDistances
@@ -77,9 +80,9 @@ def kMeans(locations, k):
     BSFtotalDistance = float('inf')
     BSFallDistances = []
     movement = 0.1
-    max = 300
+    max = 100
 
-    for _ in range(50):
+    for _ in range(25):
 
         #choosing random locations for the center
         for i in range(k):
@@ -173,41 +176,41 @@ def plotChosenClusters(choice, clustersList, filename):
 
     # Save as JPEG
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    image_path = os.path.join(desktop, f"{filename[:-4]}_SOLUTION_{choice}.jpeg")
+    imagePath = os.path.join(desktop, f"{filename[:-4]}_OVERALL_SOLUTION.jpeg")
     
     plt.axis('equal')
-    plt.savefig(image_path, format='jpeg')
+    plt.savefig(imagePath, format='jpeg')
     plt.close()
     print(f"Image of clusters saved to desktop as {filename[:-4]}_OVERALL_SOLUTION.jpeg\n")
 
-def cluster_dict_to_list(cluster_dict):
-    return [cluster_dict[i] for i in range(len(cluster_dict))]
+def clusterDictToList(clusterDict):
+    return [clusterDict[i] for i in range(len(clusterDict))]
 
-def save_cluster_locations(clusters, locations, distances, filename):
+def listClusterLocations(clusters, locations, distances, filename):
     desktop = os.path.join(os.path.expanduser("~"), "Desktop")
 
     for i, cluster in enumerate(clusters, start=1):
-        cluster_points = cluster['points']
-        cluster_indices = []
+        clusterPoints = cluster['points']
+        clusterIndices = []
 
         # Get the location numbers 
-        for p in cluster_points:
+        for p in clusterPoints:
             if p in locations:
-                cluster_indices.append(locations.index(p) + 1)
+                clusterIndices.append(locations.index(p) + 1)
 
         # Include distance in filename 
-        cluster_distance = int(distances[i - 1]) if i - 1 < len(distances) else 0
-        cluster_file_path = os.path.join(
+        clusterDistance = round(distances[i - 1]) if i - 1 < len(distances) else 0
+        clusterFilePath = os.path.join(
             desktop,
-            f"{filename[:-4]}_{i}_SOLUTION_{cluster_distance}.txt"
+            f"{filename[:-4]}_{i}_SOLUTION_{clusterDistance}.txt"
         )
 
         # Write to file
-        with open(cluster_file_path, 'w') as f:
-            for loc_num in cluster_indices:
-                f.write(f"{loc_num}\n")
+        with open(clusterFilePath, 'w') as f:
+            for locNum in clusterIndices:
+                f.write(f"{locNum}\n")
 
-        print(f"{filename[:-4]}_{i}_SOLUTION_{cluster_distance}.txt saved to desktop")
+        print(f"{filename[:-4]}_{i}_SOLUTION_{clusterDistance}.txt saved to desktop")
    
 def SSE(center, points):
     cx, cy = center

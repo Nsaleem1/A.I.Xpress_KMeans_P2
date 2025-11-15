@@ -1,4 +1,3 @@
-
 import math
 import random
 import matplotlib.pyplot as plt
@@ -32,20 +31,20 @@ cluster2 = {}
 cluster3 = {}
 cluster4 = {}
 
-cluster1, dist = functions.kMeans(locations, 1)
-functions.output(1, cluster1, dist)
+cluster1, dist1 = functions.kMeans(locations, 1)
+functions.output(1, cluster1, dist1)
 sse1 = functions.totalSSE(cluster1)
 
-cluster2, dist = functions.kMeans(locations, 2)
-functions.output(2,cluster2, dist)
+cluster2, dist2 = functions.kMeans(locations, 2)
+functions.output(2,cluster2, dist2)
 sse2 = functions.totalSSE(cluster2)
 
-cluster3, dist = functions.kMeans(locations, 3)
-functions.output(3, cluster3, dist)
+cluster3, dist3 = functions.kMeans(locations, 3)
+functions.output(3, cluster3, dist3)
 sse3 = functions.totalSSE(cluster3)
 
-cluster4, dist = functions.kMeans(locations, 4)
-functions.output(4, cluster4, dist)
+cluster4, dist4 = functions.kMeans(locations, 4)
+functions.output(4, cluster4, dist4)
 sse4 = functions.totalSSE(cluster4)
 
 with open("sseVals.txt", "w") as f:
@@ -57,22 +56,17 @@ with open("sseVals.txt", "w") as f:
 choice = int(input("Please select your choice 1 to 4: "))
  
 if (choice == 1):
-    clusters_list = functions.cluster_dict_to_list(cluster1)
-    functions.plotChosenClusters(choice, clusters_list, fileName)
+    clustersList = functions.clusterDictToList(cluster1)
+    correctDist = dist1
 if (choice == 2):
-    clusters_list = functions.cluster_dict_to_list(cluster2)
-    functions.plotChosenClusters(choice, clusters_list, fileName)
+    clustersList = functions.clusterDictToList(cluster2)
+    correctDist = dist2
 if (choice == 3):
-    clusters_list = functions.cluster_dict_to_list(cluster3)
-    functions.plotChosenClusters(choice, clusters_list, fileName)
+    clustersList = functions.clusterDictToList(cluster3)
+    correctDist = dist3
 if (choice == 4):
-    clusters_list = functions.cluster_dict_to_list(cluster4)
-    functions.plotChosenClusters(choice, clusters_list, fileName)
-
-functions.save_cluster_locations(clusters_list, locations, dist, fileName)
-
-
-
-
-
-
+    clustersList = functions.clusterDictToList(cluster4)
+    correctDist = dist4
+    
+functions.plotChosenClusters(choice, clustersList, fileName)
+functions.listClusterLocations(clustersList, locations, correctDist, fileName)
