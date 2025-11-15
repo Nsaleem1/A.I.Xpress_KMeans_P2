@@ -80,7 +80,7 @@ def kMeans(locations, k):
     BSFtotalDistance = float('inf')
     BSFallDistances = []
     movement = 0.1
-    max = 100
+    max = 300
 
     for _ in range(25):
 
